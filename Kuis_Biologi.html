@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Pembelahan Sel - Ujian Kelas</title>
+    <style>
+        /* ==================== CSS untuk Tampilan Kuis ==================== */
+        body {
+            font-family: Arial, sans-serif; 
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #d8f3dc; /* Hijau Mint */
+            color: #38a3a5; 
+        }
+        
+        .quiz-container {
+            background-color: #ffffff; 
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2); 
+            width: 90%;
+            max-width: 750px; 
+            text-align: center;
+        }
+
+        h1 {
+            color: #22577a;
+            margin-bottom: 5px;
+        }
+        p {
+            color: #57cc99;
+            font-size: 1.1em;
+            margin-bottom: 25px;
+        }
+        
+        #name-input {
+            padding: 10px;
+            width: 70%;
+            max-width: 300px;
+            border: 2px solid #57cc99;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        #start-button {
+            background-color: #38a3a5;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1em;
+            border: none;
+            transition: background-color 0.3s;
+        }
+        #start-button:hover {
+            background-color: #2a7374;
+        }
+
+        #quiz-game {
+            display: none;
+        }
+        .question-box {
+            background-color: #f7f7f7;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 6px solid #57cc99;
+            text-align: left;
+            font-size: 1.1em;
+            color: #22577a;
+        }
+        .answer-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .answer-buttons button {
+            background-color: #90d4c8;
+            color: #22577a;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            text-align: left;
+        }
+        .answer-buttons button:hover {
+            background-color: #57cc99;
+            color: white;
+        }
+
+        #result-screen {
+            display: none; 
+            margin-top: 20px;
+        }
+        #result-score-container {
+            margin: 15px 0;
+            padding: 15px;
+            border: 2px solid #57cc99;
+            border-radius: 10px;
+            background-color: #e6ffe6;
+        }
+        .score-detail {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 5px 0;
+            color: #22577a;
+        }
+        .correct {
+            color: #57cc99;
+        }
+        .incorrect {
+            color: #e53935;
+        }
+        
+        #ranking-table {
+            width: 100%;
+            margin-top: 30px;
+            border-collapse: collapse;
+            font-size: 0.95em;
+        }
+        #ranking-table th, #ranking-table td {
+            border: 1px solid #c7e9c5;
+            padding: 10px;
+            color: #22577a;
+        }
+        #ranking-table th {
+            background-color: #57cc99;
+            color: white;
+        }
+        #ranking-table tr:nth-child(even) {
+            background-color: #e3f2fd;
+        }
+        .top-rank {
+            font-weight: bold;
+            background-color: #ffee99 !important; 
+            color: #22577a !important;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <h1>Game Pembelahan Sel: Ujian Kelas 🧬</h1>
+    <p>Uji pemahamanmu tentang Mitosis, Meiosis, dan Studi Kasus! (8 Soal)</p>
+
+    <div id="start-screen">
+        <h2>Masukkan Nama Pemain</h2>
+        <input type="text" id="name-input" placeholder="Nama kamu..." maxlength="20">
+        <button id="start-button" onclick="startQuiz()">Mulai Game!</button>
+    </div>
+
+    <div id="quiz-game">
+        <div class="question-box">
+            <span id="question-number">Soal 1/8</span>
+            <div id="question-text" style="margin-top: 10px;">Pertanyaan akan muncul di sini...</div>
+        </div>
+        <div class="answer-buttons">
+            <button id="btn-A" onclick="checkAnswer('A')"></button>
+            <button id="btn-B" onclick="checkAnswer('B')"></button>
+            <button id="btn-C" onclick="checkAnswer('C')"></button>
+            <button id="btn-D" onclick="checkAnswer('D')"></button>
+        </div>
+    </div>
+    
+    <div id="result-screen">
+        <div id="result-text">Hasil Akhir untuk <span id="player-name-result"></span>:</div>
+        <div id="result-score-container">
+            <div class="score-detail correct">Benar: <span id="correct-count">0</span></div>
+            <div class="score-detail incorrect">Salah: <span id="incorrect-count">0</span></div>
+        </div>
+        <p id="result-message"></p>
+        
+        <h2>🏆 Peringkat Kelas (Skor Terbaik) 🏆</h2>
+        <p style="font-size: 0.9em; margin-top: -15px; margin-bottom: 15px; color: #777;">*Data peringkat tersimpan di browser masing-masing pemain.</p>
+        <table id="ranking-table">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Nama</th>
+                    <th>Skor</th>
+                </tr>
+            </thead>
+            <tbody id="ranking-body">
+                </tbody>
+        </table>
+        
+        <button id="restart-button" onclick="startGame()">Main Lagi!</button>
+    </div>
+</div>
+
+<script>
+    // ==================== JavaScript untuk Logika Kuis ====================
+    
+    // Data Pertanyaan Pilihan Ganda
+    const questions = [
+        { 
+            question: "Peristiwa tersusunnya kromosom di bidang ekuator sel (lempeng metafase) adalah ciri khas fase...", 
+            options: ["A. Profase", "B. Metafase", "C. Anafase", "D. Telofase"], 
+            answer: "B", 
+        },
+        { 
+            question: "Jika sel induk memiliki 2n = 20 kromosom, hasil akhir mitosis adalah...", 
+            options: ["A. Dua sel anakan dengan 10 kromosom (n)", "B. Dua sel anakan dengan 20 kromosom (2n)", "C. Empat sel anakan dengan 10 kromosom (n)", "D. Empat sel anakan dengan 20 kromosom (2n)"], 
+            answer: "B", 
+        },
+        { 
+            question: "Peristiwa krusial yang menandai fase Anafase pada Mitosis adalah...", 
+            options: ["A. Pembentukan membran inti baru.", "B. Kromosom homolog berpasangan.", "C. Pemisahan kromatid saudara.", "D. Hilangnya membran inti."], 
+            answer: "C", 
+        },
+        { 
+            question: "Di fase manakah peristiwa 'pindah silang' (crossing over) terjadi, yang merupakan sumber utama variasi genetik?", 
+            options: ["A. Profase II", "B. Metafase I", "C. Anafase II", "D. Profase I"], 
+            answer: "D", 
+        },
+        { 
+            question: "Pembelahan reduksi (pengurangan jumlah kromosom dari 2n menjadi n) pada meiosis terjadi pada tahap...", 
+            options: ["A. Anafase II (Pemisahan kromatid saudara)", "B. Anafase I (Pemisahan kromosom homolog)", "C. Metafase II (Penyusunan kromosom tunggal)", "D. Telofase II (Pembentukan 4 sel anakan)"], 
+            answer: "B", 
+        },
+        { 
+            question: "Manakah yang merupakan deskripsi hasil akhir yang BENAR dari seluruh proses Meiosis?", 
+            options: ["A. Dua sel, diploid, identik genetik.", "B. Empat sel, diploid, berbeda genetik.", "C. Dua sel, haploid, berbeda genetik.", "D. Empat sel, haploid, berbeda genetik."], 
+            answer: "D", 
+        },
+        { 
+            question: "Penyakit Kanker paling erat kaitannya dengan kegagalan fungsi di bagian siklus sel yang mana?", 
+            options: ["A. Fase istirahat (G0) yang terlalu lama.", "B. Kegagalan titik cek (checkpoint) yang menyebabkan mitosis tidak terkontrol.", "C. Pembelahan meiosis yang terus-menerus di sel somatik.", "D. Apoptosis (kematian sel terprogram) yang berlebihan."], 
+            answer: "B", 
+        },
+        { 
+            question: "Pemulia tanaman ingin menciptakan varietas baru. Proses seluler yang memberikan variasi genetik paling banyak pada keturunan adalah...", 
+            options: ["A. Mitosis pada jaringan batang.", "B. Pembelahan langsung (Amitosis) sel-sel.", "C. Meiosis dalam pembentukan sel kelamin.", "D. Duplikasi DNA pada fase S."], 
+            answer: "C", 
+        }
+    ];
+
+    // Variabel dan Elemen DOM
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let incorrectCount = 0;
+    let playerName = '';
+    let rankingData = JSON.parse(localStorage.getItem('quizRankingPembelahanSel')) || []; 
+    
+    const startScreen = document.getElementById('start-screen');
+    const quizGameScreen = document.getElementById('quiz-game');
+    const resultScreen = document.getElementById('result-screen');
+    const nameInput = document.getElementById('name-input');
+    const rankingBody = document.getElementById('ranking-body');
+    const correctCountElement = document.getElementById('correct-count');
+    const incorrectCountElement = document.getElementById('incorrect-count');
+    const resultMessageElement = document.getElementById('result-message');
+
+
+    // ----------------------------------------------------
+    // FUNGSI UTAMA GAME
+    // ----------------------------------------------------
+
+    function startGame() {
+        startScreen.style.display = 'block';
+        quizGameScreen.style.display = 'none';
+        resultScreen.style.display = 'none';
+        displayRanking();
+        nameInput.value = '';
+    }
+
+    function startQuiz() {
+        playerName = nameInput.value.trim();
+        if (playerName === "") {
+            alert("Mohon masukkan nama kamu untuk memulai!");
+            return;
+        }
+
+        currentQuestionIndex = 0;
+        score = 0;
+        incorrectCount = 0;
+        
+        startScreen.style.display = 'none';
+        quizGameScreen.style.display = 'block';
+        showQuestion();
+    }
+
+    function showQuestion() {
+        if (currentQuestionIndex < questions.length) {
+            const currentQ = questions[currentQuestionIndex];
+            document.getElementById('question-number').textContent = `Soal ${currentQuestionIndex + 1}/${questions.length}`;
+            document.getElementById('question-text').innerHTML = currentQ.question;
+            
+            document.getElementById('btn-A').textContent = currentQ.options[0];
+            document.getElementById('btn-B').textContent = currentQ.options[1];
+            document.getElementById('btn-C').textContent = currentQ.options[2];
+            document.getElementById('btn-D').textContent = currentQ.options[3];
+        } else {
+            showResult();
+        }
+    }
+
+    function checkAnswer(userAnswer) {
+        const currentQ = questions[currentQuestionIndex];
+        const isCorrect = (userAnswer === currentQ.answer);
+
+        if (isCorrect) {
+            score++;
+        } else {
+            incorrectCount++;
+        }
+
+        currentQuestionIndex++;
+        showQuestion();
+    }
+
+    // ----------------------------------------------------
+    // FUNGSI HASIL DAN RANKING
+    // ----------------------------------------------------
+
+    function showResult() {
+        saveScore(playerName, score);
+        
+        quizGameScreen.style.display = 'none';
+        resultScreen.style.display = 'block';
+        
+        // Tampilkan detail skor
+        document.getElementById('player-name-result').textContent = playerName;
+        correctCountElement.textContent = score;
+        incorrectCountElement.textContent = incorrectCount;
+        
+        // Tentukan pesan motivasi
+        let message = '';
+        if (score === questions.length) {
+            message = `🎉 **Sempurna!** Kamu menguasai Pembelahan Sel dengan luar biasa! 🌟`;
+        } else if (score >= 5) {
+            message = `👍 **Hebat!** Pemahamanmu sangat bagus. Sedikit lagi menuju sempurna!`;
+        } else {
+            message = `✍️ **Semangat!** Jangan menyerah, coba pelajari lagi materinya untuk naik peringkat.`;
+        }
+        resultMessageElement.innerHTML = message;
+        
+        displayRanking();
+    }
+
+    function saveScore(name, finalScore) {
+        const newEntry = { name: name, score: finalScore, timestamp: Date.now() };
+        rankingData.push(newEntry);
+        
+        // Urutkan: 1. Skor tertinggi, 2. Waktu tercepat (timestamp terkecil)
+        rankingData.sort((a, b) => {
+            if (b.score !== a.score) {
+                return b.score - a.score;
+            }
+            return a.timestamp - b.timestamp;
+        }); 
+        
+        if (rankingData.length > 10) {
+            rankingData = rankingData.slice(0, 10);
+        }
+        
+        localStorage.setItem('quizRankingPembelahanSel', JSON.stringify(rankingData));
+    }
+
+    function displayRanking() {
+        rankingBody.innerHTML = ''; 
+        
+        rankingData.forEach((entry, index) => {
+            const rank = index + 1;
+            const row = rankingBody.insertRow();
+            
+            if (rank === 1) {
+                row.classList.add('top-rank');
+            }
+            
+            row.insertCell().textContent = rank;
+            row.insertCell().textContent = entry.name;
+            row.insertCell().textContent = `${entry.score}/${questions.length}`;
+        });
+        
+        if (rankingData.length === 0) {
+             const row = rankingBody.insertRow();
+             const cell = row.insertCell();
+             cell.colSpan = 3;
+             cell.textContent = "Belum ada pemain! Jadilah yang pertama!";
+        }
+    }
+
+    // Mulai game saat halaman dimuat
+    startGame();
+</script>
+
+</body>
+</html>
