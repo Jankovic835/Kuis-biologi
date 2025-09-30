@@ -7,7 +7,7 @@
     <style>
         /* ==================== A. Tampilan Dasar & Latar Belakang ==================== */
         body {
-            /* FONT DIUBAH MENJADI ARIAL */
+           
             font-family: Arial, sans-serif; 
             margin: 0;
             padding: 0;
@@ -157,12 +157,12 @@
 <body>
 
 <div class="quiz-container">
-    <h1>Game Pembelahan Sel: Pilihan Ganda 🧬</h1>
-    <p>Uji pemahamanmu tentang Mitosis, Meiosis, dan Studi Kasus! (8 Soal)</p>
+    <h1>Kuis Pembelahan Sel 🧬</h1>
+   
 
     <div id="start-screen">
-        <h2>Masukkan Nama Pemain</h2>
-        <input type="text" id="name-input" placeholder="Nama kamu..." maxlength="20">
+        <h2> Nama Pemain </h2>
+        <input type="text" id="name-input" placeholder="Nama_Absen" maxlength="20">
         <button id="start-button" onclick="startQuiz()">Mulai Game!</button>
     </div>
 
@@ -351,11 +351,11 @@
 
         let message = '';
         if (score === questions.length) {
-            message = `🎉 SELAMAT ${playerName}! Sempurna! Kamu menguasai Pembelahan Sel! 🌟`;
+            message = `🎉 SELAMAT ${playerName}! Sempurna!  🌟`;
         } else if (score >= 5) {
-            message = `👍 Hebat, ${playerName}! Pemahamanmu sangat bagus. Terus latih!`;
+            message = `👍 Hebat, ${playerName}! Pemahamanmu bagus. Terus berlatih!`;
         } else {
-            message = `✍️ Semangat ${playerName}! Jangan menyerah, coba pelajari lagi materinya.`;
+            message = `✍️ Semangat ${playerName}! Pelajari lagi materinya.`;
         }
         resultMessageElement.textContent = message;
         
@@ -405,3 +405,4 @@
 
 </body>
 </html>
+
