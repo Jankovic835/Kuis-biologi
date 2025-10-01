@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Pembelahan Sel (Final)</title>
+    <title>Kuis Pembelahan Sel </title>
     <style>
         /* ==================== A. Tampilan Dasar & Latar Belakang ==================== */
         body {
@@ -219,13 +219,13 @@
                 </tbody>
         </table>
         
-        <button id="restart-button" onclick="startGame()">Selesai / Main Lagi!</button>
+        <button id="restart-button" onclick="startGame()">Kembali ke menu awal /button>
     </div>
 
 </div>
 
 <script>
-    // Data Pertanyaan Pilihan Ganda (Sudah dikoreksi)
+
     const questions = [
         { 
             question: "Peristiwa tersusunnya kromosom di bidang ekuator sel (lempeng metafase) adalah ciri khas fase...", 
@@ -361,7 +361,7 @@
         resultMessageElement.style.display = 'none';
         
         // Ubah Judul Hasil untuk Guru
-        resultTextElement.textContent = 'Akses Guru: Data Peringkat';
+        resultTextElement.textContent = 'Peringkat 🏆';
 
         displayRanking();
     }
@@ -421,11 +421,11 @@
 
         let message = '';
         if (score === questions.length) {
-            message = `🎉 SELAMAT ${playerName}! Sempurna! Kamu menguasai Pembelahan Sel! 🌟`;
+            message = `🎉 SELAMAT ${playerName}!  Kamu menguasai Pembelahan Sel! 🌟`;
         } else if (score >= 5) {
-            message = `👍 Hebat, ${playerName}! Pemahamanmu sangat bagus. Terus berlatih!`;
+            message = `👍 Hebat, ${playerName}! Pemahamanmu bagus. Terus berlatih!`;
         } else {
-            message = `✍️ Semangat ${playerName}! Jangan menyerah, coba pelajari lagi materinya.`;
+            message = `✍️ Semangat ${playerName}! Coba pelajari lagi materinya.`;
         }
         resultMessageElement.textContent = message;
         
@@ -438,8 +438,8 @@
         
         rankingData.sort((a, b) => b.score - a.score); // Urutkan berdasarkan skor
         
-        if (rankingData.length > 10) {
-            rankingData = rankingData.slice(0, 10); // Batasi 10 besar
+        if (rankingData.length > 32) {
+            rankingData = rankingData.slice(0, 32); // Batasi 32 besar
         }
         
         localStorage.setItem('quizRankingPastel', JSON.stringify(rankingData));
@@ -475,5 +475,6 @@
 
 </body>
 </html>
+
 
 
