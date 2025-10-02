@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kuis Pembelahan Sel </title>
+    <title>Kuis Pembelahan Sel 🧬</title>
     <style>
         /* ==================== A. Tampilan Dasar & Latar Belakang ==================== */
         body {
@@ -68,10 +68,10 @@
             background-color: #2a7374;
         }
         
-        /* Gaya Tombol View Ranking */
+        /* PERUBAHAN WARNA: Tombol View Ranking (Kuning Pastel) */
         #view-ranking-button {
-            background-color: #e63946; /* Merah Pastel */
-            color: white;
+            background-color: #ffd166; /* Kuning Pastel */
+            color: #22577a; /* Teks Biru Tua */
             padding: 10px 20px;
             border-radius: 8px;
             cursor: pointer;
@@ -79,9 +79,10 @@
             border: none;
             transition: background-color 0.3s;
             font-family: inherit;
+            font-weight: bold;
         }
         #view-ranking-button:hover {
-            background-color: #c9323c;
+            background-color: #ffc34d; /* Kuning lebih gelap saat dihover */
         }
 
 
@@ -128,9 +129,10 @@
             display: none; 
             margin-top: 20px;
         }
+        /* PERUBAHAN WARNA: Skor Akhir (Kuning Pastel) */
         #result-score {
             font-size: 3em;
-            color: #e53935; /* Warna Merah untuk Skor */
+            color: #ffc34d; /* Warna Kuning Pastel untuk Skor */
             font-weight: 700;
         }
         #restart-button {
@@ -168,10 +170,6 @@
             font-weight: bold;
             background-color: #ffee99 !important; /* Kuning Pastel untuk Top Rank */
             color: #22577a !important;
-        }
-        /* Style untuk Ranking Screen (saat diakses dari tombol) */
-        #rank-only-screen {
-            display: none;
         }
     </style>
 </head>
@@ -313,7 +311,7 @@
         startScreen.style.display = 'block';
         quizGameScreen.style.display = 'none';
         resultScreen.style.display = 'none';
-        // Saat kembali ke start screen, tampilkan lagi elemen hasil skor kuis biasa
+        
         resultScoreElement.style.display = 'block';
         resultMessageElement.style.display = 'block';
         resultTextElement.textContent = 'Hasil Akhir:';
@@ -353,4 +351,129 @@
     }
 
     function viewRanking() {
-        // Sembunyikan
+        // Sembunyikan semua layar yang tidak diperlukan
+        startScreen.style.display = 'none';
+        quizGameScreen.style.display = 'none';
+        resultScreen.style.display = 'block';
+
+        // Sembunyikan elemen skor dan pesan yang hanya muncul setelah kuis selesai
+        resultScoreElement.style.display = 'none'; 
+        resultMessageElement.style.display = 'none';
+        
+        // Ubah Judul Hasil untuk Guru
+        resultTextElement.textContent = 'Peringkat 🏆';
+
+        displayRanking();
+    }
+
+
+    // ----------------------------------------------------
+    // Fungsi Game Play (Dimodifikasi)
+    // ----------------------------------------------------
+
+    function showQuestion() {
+        if (currentQuestionIndex < questions.length) {
+            const currentQ = questions[currentQuestionIndex];
+            questionNumberElement.textContent = `Soal ${currentQuestionIndex + 1}/${questions.length}`;
+            questionTextElement.innerHTML = currentQ.question;
+            
+            // Tampilkan Pilihan Jawaban pada tombol
+            btnA.textContent = currentQ.options[0];
+            btnB.textContent = currentQ.options[1];
+            btnC.textContent = currentQ.options[2];
+            btnD.textContent = currentQ.options[3];
+        } else {
+            calculateScoreAndShowResult(); // Panggil fungsi penghitungan skor di akhir
+        }
+    }
+
+    function checkAnswer(userAnswer) {
+        // Cukup simpan jawaban pengguna, tanpa memberikan feedback
+        userAnswers[currentQuestionIndex] = userAnswer; 
+
+        currentQuestionIndex++;
+        showQuestion();
+    }
+
+
+    // ----------------------------------------------------
+    // Fungsi Akhir: Hasil dan Ranking (Dimodifikasi)
+    // ----------------------------------------------------
+
+    function calculateScoreAndShowResult() {
+        let finalScore = 0;
+        // Hitung skor berdasarkan jawaban yang tersimpan
+        for (let i = 0; i < questions.length; i++) {
+            if (userAnswers[i] === questions[i].answer) {
+                finalScore++;
+            }
+        }
+        
+        saveScore(playerName, finalScore);
+        
+        quizGameScreen.style.display = 'none';
+        resultScreen.style.display = 'block';
+
+        // Pastikan elemen skor dan pesan muncul setelah kuis biasa
+        resultScoreElement.style.display = 'block';
+        resultMessageElement.style.display = 'block';
+        resultTextElement.textContent = 'Hasil Akhir:'; // Kembalikan judul hasil
+        
+        resultScoreElement.textContent = `${finalScore}/${questions.length}`;
+
+        let message = '';
+        if (finalScore === questions.length) {
+            message = `🎉 SELAMAT ${playerName}! Kamu menguasai Pembelahan Sel! 🌟`;
+        } else if (finalScore >= 5) {
+            message = `👍 Hebat, ${playerName}! Pemahamanmu bagus. Terus berlatih!`;
+        } else {
+            message = `✍️ Semangat ${playerName}! Coba pelajari lagi materinya.`;
+        }
+        resultMessageElement.textContent = message;
+        
+        displayRanking(); // Tampilkan peringkat yang sudah diperbarui
+    }
+
+    function saveScore(name, finalScore) {
+        const newEntry = { name: name, score: finalScore, timestamp: Date.now() };
+        rankingData.push(newEntry);
+        
+        rankingData.sort((a, b) => b.score - a.score); // Urutkan berdasarkan skor
+        
+        if (rankingData.length > 32) {
+            rankingData = rankingData.slice(0, 32); // Batasi 32 besar
+        }
+        
+        localStorage.setItem('quizRankingPastel', JSON.stringify(rankingData));
+    }
+
+    function displayRanking() {
+        rankingBody.innerHTML = ''; 
+        
+        rankingData.forEach((entry, index) => {
+            const rank = index + 1;
+            const row = rankingBody.insertRow();
+            
+            if (rank === 1) {
+                row.classList.add('top-rank');
+            }
+            
+            row.insertCell().textContent = rank;
+            row.insertCell().textContent = entry.name;
+            row.insertCell().textContent = `${entry.score}/${questions.length}`;
+        });
+        
+        if (rankingData.length === 0) {
+              const row = rankingBody.insertRow();
+              const cell = row.insertCell();
+              cell.colSpan = 3;
+              cell.textContent = "Belum ada pemain";
+        }
+    }
+
+    // Mulai game saat halaman dimuat
+    startGame();
+</script>
+
+</body>
+</html>
