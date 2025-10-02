@@ -1,478 +1,557 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kuis Pembelahan Sel 🧬</title>
-    <style>
-        /* ==================== A. Tampilan Dasar & Latar Belakang ==================== */
-        body {
-            font-family: Arial, sans-serif; 
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            /* Latar Belakang: Hijau Pastel Mint */
-            background-color: #d8f3dc; 
-            color: #38a3a5; /* Warna Teks Utama (Hijau Tua Pastel) */
-        }
-        
-        /* ==================== B. Kotak Game Utama ==================== */
-        .quiz-container {
-            background-color: #ffffff; /* Putih bersih */
-            padding: 35px;
-            border-radius: 20px;
-            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2); 
-            width: 90%;
-            max-width: 750px; 
-            text-align: center;
-        }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Pembelahan Sel 🧬</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ==================== A. Tampilan Dasar & Latar Belakang ==================== */
+        :root {
+            --bg-color: #f0fdf4; /* Hijau sangat pastel */
+            --primary-green: #2d6a4f;
+            --secondary-green: #40916c;
+            --light-green: #b7e4c7;
+            --text-dark: #1b4332;
+            --white: #ffffff;
+            --correct: #52b788;
+            --incorrect: #f28482;
+            --accent-yellow: #ffd60a;
+        }
 
-        /* ==================== C. Gaya Judul & Input Nama ==================== */
-        h1 {
-            color: #22577a; /* Biru Tua Pastel */
-            margin-bottom: 5px;
-            font-family: inherit;
-        }
-        p {
-            color: #57cc99; /* Hijau Terang Pastel */
-            font-size: 1.1em;
-            margin-bottom: 25px;
-        }
-        
-        /* Gaya untuk Input Nama (Start Screen) */
-        #name-input {
-            padding: 10px;
-            width: 70%;
-            max-width: 300px;
-            border: 2px solid #57cc99;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            font-family: inherit;
-        }
-        #start-button {
-            background-color: #38a3a5; /* Hijau Laut Pastel */
-            color: white;
-            padding: 12px 25px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 1.1em;
-            border: none;
-            transition: background-color 0.3s;
-            font-family: inherit;
-            margin-bottom: 15px; /* Tambahan Jarak */
-        }
-        #start-button:hover {
-            background-color: #2a7374;
-        }
-        
-        /* PERUBAHAN WARNA: Tombol View Ranking (Kuning Pastel) */
-        #view-ranking-button {
-            background-color: #ffd166; /* Kuning Pastel */
-            color: #22577a; /* Teks Biru Tua */
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.95em;
-            border: none;
-            transition: background-color 0.3s;
-            font-family: inherit;
-            font-weight: bold;
-        }
-        #view-ranking-button:hover {
-            background-color: #ffc34d; /* Kuning lebih gelap saat dihover */
-        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--bg-color);
+            background-image:
+                radial-gradient(var(--light-green) 1px, transparent 1px),
+                radial-gradient(var(--light-green) 1px, var(--bg-color) 1px);
+            background-size: 40px 40px;
+            background-position: 0 0, 20px 20px;
+            color: var(--text-dark);
+        }
+
+        /* ==================== B. Kotak Game Utama ==================== */
+        .quiz-container {
+            background-color: var(--white);
+            padding: 30px 40px;
+            border-radius: 25px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            width: 95%;
+            max-width: 700px;
+            text-align: center;
+            border: 3px solid var(--primary-green);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* ==================== C. Gaya Judul & Input Nama ==================== */
+        h1 {
+            color: var(--primary-green);
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        h2 {
+            color: var(--secondary-green);
+            font-weight: 600;
+        }
+
+        #name-input {
+            padding: 12px 20px;
+            width: 70%;
+            border: 2px solid var(--light-green);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-family: inherit;
+            font-size: 1em;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        #name-input:focus {
+            outline: none;
+            border-color: var(--secondary-green);
+            box-shadow: 0 0 10px rgba(64, 145, 108, 0.3);
+        }
+        
+        .main-button {
+            background-color: var(--primary-green);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            border: none;
+            transition: transform 0.2s, background-color 0.3s;
+            font-family: inherit;
+            margin: 5px;
+        }
+        .main-button:hover {
+            background-color: var(--text-dark);
+            transform: translateY(-3px);
+        }
+        
+        #view-ranking-button {
+            background-color: var(--accent-yellow);
+            color: var(--text-dark);
+        }
+        #view-ranking-button:hover {
+             background-color: #ffc300;
+        }
 
 
-        /* ==================== D. Gaya Game & Tombol Pilihan Ganda ==================== */
-        #quiz-game {
-            display: none;
-        }
-        .question-box {
-            background-color: #f7f7f7; /* Krem Muda */
-            padding: 25px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            border-left: 6px solid #57cc99;
-            text-align: left;
-            font-size: 1.1em;
-            color: #22577a;
-        }
-        .answer-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr; /* 2 kolom untuk A, B, C, D */
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .answer-buttons button {
-            background-color: #90d4c8; /* Warna tombol Biru-Hijau Pastel */
-            color: #22577a;
-            border: none;
-            padding: 12px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 1em;
-            font-weight: bold;
-            transition: background-color 0.3s, transform 0.1s;
-            text-align: left;
-            font-family: inherit;
-        }
-        .answer-buttons button:hover {
-            background-color: #57cc99; /* Hijau pastel lebih cerah saat dihover */
-            color: white;
-        }
+        /* ==================== D. Gaya Game ==================== */
+        #quiz-game { display: none; }
+        
+        /* Header Kuis: Progress & Timer */
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        #progress-bar-container {
+            width: 80%;
+            height: 15px;
+            background-color: #e9ecef;
+            border-radius: 10px;
+        }
+        #progress-bar {
+            width: 0%;
+            height: 100%;
+            background-color: var(--secondary-green);
+            border-radius: 10px;
+            transition: width 0.5s ease-in-out;
+        }
+        #timer {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: var(--primary-green);
+        }
+        
+        /* Kotak Pertanyaan */
+        .question-box {
+            background-color: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border-left: 8px solid var(--secondary-green);
+            text-align: left;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+        
+        /* Tombol Jawaban */
+        .answer-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .answer-buttons button {
+            background-color: var(--white);
+            color: var(--primary-green);
+            border: 2px solid var(--light-green);
+            padding: 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+        .answer-buttons button:hover:not(:disabled) {
+            background-color: var(--light-green);
+            color: var(--text-dark);
+            transform: translateY(-2px);
+        }
+        .answer-buttons button:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .answer-buttons button.correct {
+            background-color: var(--correct);
+            border-color: var(--correct);
+            color: white;
+            animation: pulse 0.5s;
+        }
+        .answer-buttons button.incorrect {
+            background-color: var(--incorrect);
+            border-color: var(--incorrect);
+            color: white;
+            animation: shake 0.5s;
+        }
+        
+        #rationale {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9ecef;
+            border-radius: 10px;
+            color: var(--text-dark);
+            text-align: center;
+            font-size: 0.95em;
+            display: none;
+            animation: fadeIn 0.5s;
+        }
 
-        /* ==================== E. Gaya Hasil & Ranking ==================== */
-        #result-screen {
-            display: none; 
-            margin-top: 20px;
-        }
-        /* PERUBAHAN WARNA: Skor Akhir (Kuning Pastel) */
-        #result-score {
-            font-size: 3em;
-            color: #ffc34d; /* Warna Kuning Pastel untuk Skor */
-            font-weight: 700;
-        }
-        #restart-button {
-            background-color: #38a3a5;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-top: 20px;
-            font-size: 1em;
-            border: none;
-            font-family: inherit;
-        }
-        
-        /* Gaya Tabel Ranking */
-        #ranking-table {
-            width: 100%;
-            margin-top: 30px;
-            border-collapse: collapse;
-            font-size: 0.95em;
-        }
-        #ranking-table th, #ranking-table td {
-            border: 1px solid #c7e9c5;
-            padding: 10px;
-            color: #22577a;
-        }
-        #ranking-table th {
-            background-color: #57cc99;
-            color: white;
-        }
-        #ranking-table tr:nth-child(even) {
-            background-color: #e3f2fd; /* Biru muda pastel */
-        }
-        .top-rank {
-            font-weight: bold;
-            background-color: #ffee99 !important; /* Kuning Pastel untuk Top Rank */
-            color: #22577a !important;
-        }
-    </style>
+        /* Animasi Tombol */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+        
+
+        /* ==================== E. Gaya Hasil & Ranking ==================== */
+        #result-screen { display: none; }
+        
+        #result-score {
+            font-size: 4em;
+            color: var(--primary-green);
+            font-weight: 700;
+        }
+        #result-message {
+            font-size: 1.2em;
+            color: var(--secondary-green);
+            font-weight: 600;
+        }
+        
+        /* Tabel Ranking */
+        #ranking-table {
+            width: 100%;
+            margin-top: 25px;
+            border-collapse: collapse;
+        }
+        #ranking-table th, #ranking-table td {
+            border-bottom: 1px solid #dee2e6;
+            padding: 12px 15px;
+        }
+        #ranking-table th {
+            background-color: var(--secondary-green);
+            color: white;
+        }
+        #ranking-table tr:nth-child(even) { background-color: #f8f9fa; }
+        
+        .top-rank {
+            font-weight: bold;
+            background-color: var(--accent-yellow) !important;
+            color: var(--text-dark) !important;
+        }
+    </style>
 </head>
 <body>
 
+<audio id="correct-sound" src="https://assets.quizlet.com/a/sounds/correct-chime.04200779.mp3" preload="auto"></audio>
+<audio id="incorrect-sound" src="https://assets.quizlet.com/a/sounds/incorrect-buzzer.23335334.mp3" preload="auto"></audio>
+
 <div class="quiz-container">
-    <h1>Kuis Pembelahan Sel 🧬</h1>
+    <h1>Kuis Pembelahan Sel 🧬</h1>
 
-    <div id="start-screen">
-        <h2> Nama Pemain</h2>
-        <input type="text" id="name-input" placeholder="Nama_Absen" maxlength="20">
-        <button id="start-button" onclick="startQuiz()">Mulai Kuis</button>
-        <br>
-        <button id="view-ranking-button" onclick="promptPassword()">Lihat Peringkat 🏆</button>
-    </div>
+    <div id="start-screen">
+        <h2>Siap Uji Pengetahuanmu?</h2>
+        <input type="text" id="name-input" placeholder="Tulis namamu di sini..." maxlength="20">
+        <br>
+        <button id="start-button" class="main-button" onclick="startQuiz()">Mulai Kuis! 🚀</button>
+        <button id="view-ranking-button" class="main-button" onclick="promptPassword()">Lihat Peringkat 🏆</button>
+    </div>
 
-    <div id="quiz-game">
-        <div class="question-box">
-            <span id="question-number">Soal 1/8</span>
-            <div id="question-text" style="margin-top: 10px;">Pertanyaan akan muncul di sini...</div>
-        </div>
-        <div class="answer-buttons">
-            <button id="btn-A" onclick="checkAnswer('A')"></button>
-            <button id="btn-B" onclick="checkAnswer('B')"></button>
-            <button id="btn-C" onclick="checkAnswer('C')"></button>
-            <button id="btn-D" onclick="checkAnswer('D')"></button>
-        </div>
-    </div>
-    
-    <div id="result-screen">
-        <div id="result-text">Hasil Akhir:</div>
-        <div id="result-score"></div>
-        <p id="result-message"></p>
-        
-        <h2>🏆 Peringkat Kelas 🏆</h2>
-        <table id="ranking-table">
-            <thead>
-                <tr>
-                    <th>Rank</th>
-                    <th>Nama</th>
-                    <th>Skor</th>
-                </tr>
-            </thead>
-            <tbody id="ranking-body">
-                </tbody>
-        </table>
-        
-        <button id="restart-button" onclick="startGame()">Kembali ke menu awal </button>
-    </div>
+    <div id="quiz-game">
+        <div class="quiz-header">
+            <div id="progress-bar-container">
+                <div id="progress-bar"></div>
+            </div>
+            <div id="timer">15</div>
+        </div>
+        <div class="question-box">
+            <div id="question-text">Pertanyaan akan muncul di sini...</div>
+        </div>
+        <div class="answer-buttons">
+            <button id="btn-A" onclick="checkAnswer(this)"></button>
+            <button id="btn-B" onclick="checkAnswer(this)"></button>
+            <button id="btn-C" onclick="checkAnswer(this)"></button>
+            <button id="btn-D" onclick="checkAnswer(this)"></button>
+        </div>
+        <div id="rationale"></div>
+    </div>
+    
+    <div id="result-screen">
+        <h2 id="result-title">Hasil Akhir:</h2>
+        <div id="result-score"></div>
+        <p id="result-message"></p>
+        
+        <h2>🏆 Papan Peringkat 🏆</h2>
+        <table id="ranking-table">
+            <thead>
+                <tr>
+                    <th>Peringkat</th>
+                    <th>Nama</th>
+                    <th>Skor</th>
+                </tr>
+            </thead>
+            <tbody id="ranking-body"></tbody>
+        </table>
+        
+        <button id="restart-button" class="main-button" onclick="startGame()">Kembali ke Menu</button>
+    </div>
 
 </div>
 
 <script>
+    const questions = [
+        { question: "Peristiwa tersusunnya kromosom di bidang ekuator sel (lempeng metafase) adalah ciri khas fase...", options: ["A. Profase", "B. Metafase", "C. Anafase", "D. Telofase"], answer: "B", rationale: "Metafase ditandai dengan kromosom yang berbaris rapi di tengah sel atau bidang ekuator." },
+        { question: "Jika sel induk memiliki 2n = 20 kromosom, hasil akhir mitosis adalah...", options: ["A. Dua sel anakan dengan 10 kromosom (n)", "B. Dua sel anakan dengan 20 kromosom (2n)", "C. Empat sel anakan dengan 10 kromosom (n)", "D. Empat sel anakan dengan 20 kromosom (2n)"], answer: "B", rationale: "Mitosis menghasilkan dua sel anakan yang identik dengan induknya, jadi jumlah kromosom tetap (2n)." },
+        { question: "Peristiwa krusial yang menandai fase Anafase pada Mitosis adalah...", options: ["A. Pembentukan membran inti baru.", "B. Kromosom homolog berpasangan.", "C. Pemisahan kromatid saudara.", "D. Hilangnya membran inti."], answer: "C", rationale: "Anafase adalah saat kromatid saudara ditarik ke kutub yang berlawanan." },
+        { question: "Di fase manakah peristiwa 'pindah silang' (crossing over) terjadi, yang merupakan sumber utama variasi genetik?", options: ["A. Profase II", "B. Metafase I", "C. Anafase II", "D. Profase I"], answer: "D", rationale: "Pindah silang terjadi pada Profase I, saat kromosom homolog saling bertukar materi genetik." },
+        { question: "Pembelahan reduksi (pengurangan jumlah kromosom dari 2n menjadi n) pada meiosis terjadi pada tahap...", options: ["A. Anafase II (Pemisahan kromatid saudara)", "B. Anafase I (Pemisahan kromosom homolog)", "C. Metafase II (Penyusunan kromosom tunggal)", "D. Telofase II (Pembentukan 4 sel anakan)"], answer: "B", rationale: "Pengurangan jumlah kromosom terjadi saat kromosom homolog (bukan kromatid saudara) dipisahkan pada Anafase I." },
+        { question: "Manakah yang merupakan deskripsi hasil akhir yang BENAR dari seluruh proses Meiosis?", options: ["A. Dua sel, diploid, identik genetik.", "B. Empat sel, diploid, berbeda genetik.", "C. Dua sel, haploid, berbeda genetik.", "D. Empat sel, haploid, berbeda genetik."], answer: "D", rationale: "Meiosis menghasilkan empat sel haploid yang genetiknya unik karena pindah silang." },
+        { question: "Penyakit Kanker paling erat kaitannya dengan kegagalan fungsi di bagian siklus sel yang mana?", options: ["A. Fase istirahat (G0) yang terlalu lama.", "B. Kegagalan titik cek (checkpoint) yang menyebabkan mitosis tidak terkontrol.", "C. Pembelahan meiosis yang terus-menerus di sel somatik.", "D. Apoptosis (kematian sel terprogram) yang berlebihan."], answer: "B", rationale: "Kanker adalah hasil dari pembelahan sel yang tidak terkontrol karena gagalnya mekanisme checkpoint siklus sel." },
+        { question: "Pemulia tanaman ingin menciptakan varietas baru. Proses seluler yang memberikan variasi genetik paling banyak pada keturunan adalah...", options: ["A. Mitosis pada jaringan batang.", "B. Pembelahan langsung (Amitosis) sel-sel.", "C. Meiosis dalam pembentukan sel kelamin.", "D. Duplikasi DNA pada fase S."], answer: "C", rationale: "Meiosis menciptakan kombinasi gen baru melalui pindah silang, yang penting untuk pemuliaan dan evolusi." }
+    ];
 
-    const questions = [
-        { 
-            question: "Peristiwa tersusunnya kromosom di bidang ekuator sel (lempeng metafase) adalah ciri khas fase...", 
-            options: ["A. Profase", "B. Metafase", "C. Anafase", "D. Telofase"], 
-            answer: "B", 
-            rationale: "Tersusunnya kromosom di bidang ekuator adalah ciri khas Metafase."
-        },
-        { 
-            question: "Jika sel induk memiliki 2n = 20 kromosom, hasil akhir mitosis adalah...", 
-            options: ["A. Dua sel anakan dengan 10 kromosom (n)", "B. Dua sel anakan dengan 20 kromosom (2n)", "C. Empat sel anakan dengan 10 kromosom (n)", "D. Empat sel anakan dengan 20 kromosom (2n)"], 
-            answer: "B", 
-            rationale: "Mitosis menghasilkan dua sel anakan yang bersifat diploid (2n) dan identik dengan induk."
-        },
-        { 
-            question: "Peristiwa krusial yang menandai fase Anafase pada Mitosis adalah...", 
-            options: ["A. Pembentukan membran inti baru.", "B. Kromosom homolog berpasangan.", "C. Pemisahan kromatid saudara.", "D. Hilangnya membran inti."], 
-            answer: "C", 
-            rationale: "Anafase diawali dengan pemisahan sentromer, memisahkan kromatid saudara menjadi kromosom tunggal."
-        },
-        { 
-            question: "Di fase manakah peristiwa 'pindah silang' (crossing over) terjadi, yang merupakan sumber utama variasi genetik?", 
-            options: ["A. Profase II", "B. Metafase I", "C. Anafase II", "D. Profase I"], 
-            answer: "D", 
-            rationale: "Pindah silang terjadi selama Profase I, saat kromosom homolog berpasangan (sinapsis)."
-        },
-        { 
-            question: "Pembelahan reduksi (pengurangan jumlah kromosom dari 2n menjadi n) pada meiosis terjadi pada tahap...", 
-            options: ["A. Anafase II (Pemisahan kromatid saudara)", "B. Anafase I (Pemisahan kromosom homolog)", "C. Metafase II (Penyusunan kromosom tunggal)", "D. Telofase II (Pembentukan 4 sel anakan)"], 
-            answer: "B", 
-            rationale: "Pemisahan kromosom homolog pada Anafase I adalah peristiwa yang mengurangi jumlah kromosom sel anakan menjadi setengahnya (haploid)."
-        },
-        { 
-            question: "Manakah yang merupakan deskripsi hasil akhir yang BENAR dari seluruh proses Meiosis?", 
-            options: ["A. Dua sel, diploid, identik genetik.", "B. Empat sel, diploid, berbeda genetik.", "C. Dua sel, haploid, berbeda genetik.", "D. Empat sel, haploid, berbeda genetik."], 
-            answer: "D", 
-            rationale: "Meiosis menghasilkan empat sel anakan yang haploid (n) dan berbeda secara genetik karena pindah silang dan segregasi acak."
-        },
-        { 
-            question: "Penyakit Kanker paling erat kaitannya dengan kegagalan fungsi di bagian siklus sel yang mana?", 
-            options: ["A. Fase istirahat (G0) yang terlalu lama.", "B. Kegagalan titik cek (checkpoint) yang menyebabkan mitosis tidak terkontrol.", "C. Pembelahan meiosis yang terus-menerus di sel somatik.", "D. Apoptosis (kematian sel terprogram) yang berlebihan."], 
-            answer: "B", 
-            rationale: "Kanker disebabkan oleh kegagalan sistem kontrol yang membiarkan sel membelah (mitosis) tanpa henti."
-        },
-        { 
-            question: "Pemulia tanaman ingin menciptakan varietas baru. Proses seluler yang memberikan variasi genetik paling banyak pada keturunan adalah...", 
-            options: ["A. Mitosis pada jaringan batang.", "B. Pembelahan langsung (Amitosis) sel-sel.", "C. Meiosis dalam pembentukan sel kelamin.", "D. Duplikasi DNA pada fase S."], 
-            answer: "C", 
-            rationale: "Meiosis menghasilkan gamet yang unik melalui pindah silang, yang merupakan dasar dari variasi genetik pada reproduksi seksual."
-        }
-    ];
+    // Variabel Global
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let playerName = '';
+    let timerInterval;
+    const TIME_LIMIT = 15; // Waktu per soal dalam detik
 
-    // ==================== Variabel GLOBAL yang Dimodifikasi ====================
-    let currentQuestionIndex = 0;
-    let playerName = '';
-    // ARRAY BARU: Untuk menyimpan jawaban pengguna
-    let userAnswers = [];
-    // --------------------------------------------------------------------------
-    
-    const TEACHER_PASS = "BIOLOGI123"; 
-    let rankingData = JSON.parse(localStorage.getItem('quizRankingPastel')) || []; 
-    
-    const startScreen = document.getElementById('start-screen');
-    const quizGameScreen = document.getElementById('quiz-game');
-    const resultScreen = document.getElementById('result-screen');
-    const nameInput = document.getElementById('name-input');
-    
-    const questionTextElement = document.getElementById('question-text');
-    const questionNumberElement = document.getElementById('question-number');
-    const resultScoreElement = document.getElementById('result-score');
-    const resultMessageElement = document.getElementById('result-message');
-    const rankingBody = document.getElementById('ranking-body');
-    const resultTextElement = document.getElementById('result-text');
+    const TEACHER_PASS = "BIOLOGI123";
+    let rankingData = JSON.parse(localStorage.getItem('quizRankingPastel')) || [];
 
+    // Elemen DOM
+    const startScreen = document.getElementById('start-screen');
+    const quizGameScreen = document.getElementById('quiz-game');
+    const resultScreen = document.getElementById('result-screen');
+    const nameInput = document.getElementById('name-input');
+    
+    const questionTextElement = document.getElementById('question-text');
+    const rationaleElement = document.getElementById('rationale');
+    const answerButtons = document.querySelectorAll('.answer-buttons button');
+    
+    const progressBar = document.getElementById('progress-bar');
+    const timerElement = document.getElementById('timer');
+    
+    const resultScoreElement = document.getElementById('result-score');
+    const resultMessageElement = document.getElementById('result-message');
+    const rankingBody = document.getElementById('ranking-body');
+    const resultTitle = document.getElementById('result-title');
 
-    const btnA = document.getElementById('btn-A');
-    const btnB = document.getElementById('btn-B');
-    const btnC = document.getElementById('btn-C');
-    const btnD = document.getElementById('btn-D');
+    // Suara
+    const correctSound = document.getElementById('correct-sound');
+    const incorrectSound = document.getElementById('incorrect-sound');
 
-    // ----------------------------------------------------
-    // Fungsi Awal: Memuat Data dan Tampilan
-    // ----------------------------------------------------
+    // ================== Fungsi Utama ==================
 
-    function startGame() {
-        startScreen.style.display = 'block';
-        quizGameScreen.style.display = 'none';
-        resultScreen.style.display = 'none';
-        
-        resultScoreElement.style.display = 'block';
-        resultMessageElement.style.display = 'block';
-        resultTextElement.textContent = 'Hasil Akhir:';
-        nameInput.value = '';
-    }
+    function startGame() {
+        startScreen.style.display = 'block';
+        quizGameScreen.style.display = 'none';
+        resultScreen.style.display = 'none';
+        nameInput.value = '';
+    }
 
-    function startQuiz() {
-        playerName = nameInput.value.trim();
-        if (playerName === "") {
-            alert("Mohon masukkan nama kamu untuk memulai!");
-            return;
-        }
+    function startQuiz() {
+        playerName = nameInput.value.trim();
+        if (playerName === "") {
+            alert("Isi nama dulu ya!");
+            return;
+        }
 
-        currentQuestionIndex = 0;
-        userAnswers = []; // Reset jawaban pengguna
-        
-        startScreen.style.display = 'none';
-        quizGameScreen.style.display = 'block';
-        showQuestion();
-    }
+        currentQuestionIndex = 0;
+        score = 0;
+        
+        startScreen.style.display = 'none';
+        resultScreen.style.display = 'none';
+        quizGameScreen.style.display = 'block';
+        showQuestion();
+    }
+    
+    function showQuestion() {
+        resetState();
+        if (currentQuestionIndex < questions.length) {
+            const currentQ = questions[currentQuestionIndex];
+            questionTextElement.innerHTML = `<b>${currentQuestionIndex + 1}.</b> ${currentQ.question}`;
+            
+            answerButtons.forEach((button, index) => {
+                button.textContent = currentQ.options[index];
+                button.dataset.answer = currentQ.options[index].charAt(0);
+            });
+            
+            updateProgressBar();
+            startTimer();
+        } else {
+            showResult();
+        }
+    }
 
-    // ----------------------------------------------------
-    // Fungsi Khusus Guru (View Ranking)
-    // ----------------------------------------------------
+    function checkAnswer(selectedButton) {
+        clearInterval(timerInterval);
+        const selectedAnswer = selectedButton.dataset.answer;
+        const correctAnswer = questions[currentQuestionIndex].answer;
+        
+        // Nonaktifkan semua tombol
+        answerButtons.forEach(button => button.disabled = true);
+        
+        // Tampilkan penjelasan
+        rationaleElement.textContent = `💡 Penjelasan: ${questions[currentQuestionIndex].rationale}`;
+        rationaleElement.style.display = 'block';
+        
+        if (selectedAnswer === correctAnswer) {
+            score++;
+            selectedButton.classList.add('correct');
+            correctSound.play();
+        } else {
+            selectedButton.classList.add('incorrect');
+            incorrectSound.play();
+            // Tampilkan jawaban yang benar
+            answerButtons.forEach(button => {
+                if (button.dataset.answer === correctAnswer) {
+                    button.classList.add('correct');
+                }
+            });
+        }
+        
+        // Lanjut ke soal berikutnya setelah 2.5 detik
+        setTimeout(() => {
+            currentQuestionIndex++;
+            showQuestion();
+        }, 2500);
+    }
 
-    function promptPassword() {
-        const inputPass = prompt("Masukkan KODE GURU untuk melihat peringkat:");
-        if (inputPass === null) { // Jika user tekan 'Cancel'
-            return;
-        }
+    function showResult() {
+        quizGameScreen.style.display = 'none';
+        resultScreen.style.display = 'block';
+        
+        resultTitle.textContent = `Hasil Akhir untuk ${playerName}:`;
+        resultScoreElement.textContent = `${score}/${questions.length}`;
 
-        if (inputPass === TEACHER_PASS) {
-            viewRanking();
-        } else {
-            alert("❌ KODE SALAH! Anda tidak memiliki akses.");
-        }
-    }
+        let message = '';
+        if (score === questions.length) {
+            message = `🎉 SEMPURNA! Kamu adalah master pembelahan sel! 🌟`;
+        } else if (score >= 5) {
+            message = `👍 Hebat! Pemahamanmu sudah sangat baik.`;
+        } else {
+            message = `✍️ Jangan menyerah! Coba pelajari lagi materinya ya.`;
+        }
+        resultMessageElement.textContent = message;
 
-    function viewRanking() {
-        // Sembunyikan semua layar yang tidak diperlukan
-        startScreen.style.display = 'none';
-        quizGameScreen.style.display = 'none';
-        resultScreen.style.display = 'block';
+        saveScore(playerName, score);
+        displayRanking();
+    }
 
-        // Sembunyikan elemen skor dan pesan yang hanya muncul setelah kuis selesai
-        resultScoreElement.style.display = 'none'; 
-        resultMessageElement.style.display = 'none';
-        
-        // Ubah Judul Hasil untuk Guru
-        resultTextElement.textContent = 'Peringkat 🏆';
+    // ================== Fungsi Bantu ==================
+    
+    function resetState() {
+        answerButtons.forEach(button => {
+            button.className = '';
+            button.disabled = false;
+        });
+        rationaleElement.style.display = 'none';
+    }
+    
+    function updateProgressBar() {
+        const progressPercentage = ((currentQuestionIndex) / questions.length) * 100;
+        progressBar.style.width = `${progressPercentage}%`;
+    }
 
-        displayRanking();
-    }
+    function startTimer() {
+        let timeLeft = TIME_LIMIT;
+        timerElement.textContent = timeLeft;
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            timerElement.textContent = timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                timeUp();
+            }
+        }, 1000);
+    }
+    
+    function timeUp() {
+        incorrectSound.play();
+        // Tampilkan penjelasan
+        rationaleElement.textContent = `⏳ Waktu Habis! Penjelasan: ${questions[currentQuestionIndex].rationale}`;
+        rationaleElement.style.display = 'block';
 
+        const correctAnswer = questions[currentQuestionIndex].answer;
+        answerButtons.forEach(button => {
+            button.disabled = true;
+            if (button.dataset.answer === correctAnswer) {
+                button.classList.add('correct');
+            }
+        });
+        
+        setTimeout(() => {
+            currentQuestionIndex++;
+            showQuestion();
+        }, 2500);
+    }
+    
+    // ================== Peringkat ==================
 
-    // ----------------------------------------------------
-    // Fungsi Game Play (Dimodifikasi)
-    // ----------------------------------------------------
+    function promptPassword() {
+        const inputPass = prompt("Masukkan KODE GURU untuk melihat peringkat:");
+        if (inputPass === TEACHER_PASS) {
+            viewRankingOnly();
+        } else if (inputPass !== null) {
+            alert("❌ KODE SALAH! Anda tidak memiliki akses.");
+        }
+    }
 
-    function showQuestion() {
-        if (currentQuestionIndex < questions.length) {
-            const currentQ = questions[currentQuestionIndex];
-            questionNumberElement.textContent = `Soal ${currentQuestionIndex + 1}/${questions.length}`;
-            questionTextElement.innerHTML = currentQ.question;
-            
-            // Tampilkan Pilihan Jawaban pada tombol
-            btnA.textContent = currentQ.options[0];
-            btnB.textContent = currentQ.options[1];
-            btnC.textContent = currentQ.options[2];
-            btnD.textContent = currentQ.options[3];
-        } else {
-            calculateScoreAndShowResult(); // Panggil fungsi penghitungan skor di akhir
-        }
-    }
+    function viewRankingOnly() {
+        startScreen.style.display = 'none';
+        quizGameScreen.style.display = 'none';
+        resultScreen.style.display = 'block';
+        resultTitle.textContent = '🏆 Papan Peringkat Kelas 🏆';
+        resultScoreElement.style.display = 'none';
+        resultMessageElement.style.display = 'none';
+        displayRanking();
+    }
+    
+    function saveScore(name, finalScore) {
+        const newEntry = { name: name, score: finalScore };
+        rankingData.push(newEntry);
+        rankingData.sort((a, b) => b.score - a.score || a.name.localeCompare(b.name));
+        if (rankingData.length > 32) {
+            rankingData = rankingData.slice(0, 32);
+        }
+        localStorage.setItem('quizRankingPastel', JSON.stringify(rankingData));
+    }
 
-    function checkAnswer(userAnswer) {
-        // Cukup simpan jawaban pengguna, tanpa memberikan feedback
-        userAnswers[currentQuestionIndex] = userAnswer; 
+    function displayRanking() {
+        rankingBody.innerHTML = '';
+        if (rankingData.length === 0) {
+            rankingBody.innerHTML = `<tr><td colspan="3">Belum ada pemain yang menyelesaikan kuis.</td></tr>`;
+            return;
+        }
 
-        currentQuestionIndex++;
-        showQuestion();
-    }
+        rankingData.forEach((entry, index) => {
+            const rank = index + 1;
+            const row = rankingBody.insertRow();
+            if (rank === 1) {
+                row.classList.add('top-rank');
+            }
+            row.insertCell().textContent = rank === 1 ? '🥇' : (rank === 2 ? '🥈' : (rank === 3 ? '🥉' : rank));
+            row.insertCell().textContent = entry.name;
+            row.insertCell().textContent = `${entry.score}/${questions.length}`;
+        });
+    }
 
-
-    // ----------------------------------------------------
-    // Fungsi Akhir: Hasil dan Ranking (Dimodifikasi)
-    // ----------------------------------------------------
-
-    function calculateScoreAndShowResult() {
-        let finalScore = 0;
-        // Hitung skor berdasarkan jawaban yang tersimpan
-        for (let i = 0; i < questions.length; i++) {
-            if (userAnswers[i] === questions[i].answer) {
-                finalScore++;
-            }
-        }
-        
-        saveScore(playerName, finalScore);
-        
-        quizGameScreen.style.display = 'none';
-        resultScreen.style.display = 'block';
-
-        // Pastikan elemen skor dan pesan muncul setelah kuis biasa
-        resultScoreElement.style.display = 'block';
-        resultMessageElement.style.display = 'block';
-        resultTextElement.textContent = 'Hasil Akhir:'; // Kembalikan judul hasil
-        
-        resultScoreElement.textContent = `${finalScore}/${questions.length}`;
-
-        let message = '';
-        if (finalScore === questions.length) {
-            message = `🎉 SELAMAT ${playerName}! Kamu menguasai Pembelahan Sel! 🌟`;
-        } else if (finalScore >= 5) {
-            message = `👍 Hebat, ${playerName}! Pemahamanmu bagus. Terus berlatih!`;
-        } else {
-            message = `✍️ Semangat ${playerName}! Coba pelajari lagi materinya.`;
-        }
-        resultMessageElement.textContent = message;
-        
-        displayRanking(); // Tampilkan peringkat yang sudah diperbarui
-    }
-
-    function saveScore(name, finalScore) {
-        const newEntry = { name: name, score: finalScore, timestamp: Date.now() };
-        rankingData.push(newEntry);
-        
-        rankingData.sort((a, b) => b.score - a.score); // Urutkan berdasarkan skor
-        
-        if (rankingData.length > 32) {
-            rankingData = rankingData.slice(0, 32); // Batasi 32 besar
-        }
-        
-        localStorage.setItem('quizRankingPastel', JSON.stringify(rankingData));
-    }
-
-    function displayRanking() {
-        rankingBody.innerHTML = ''; 
-        
-        rankingData.forEach((entry, index) => {
-            const rank = index + 1;
-            const row = rankingBody.insertRow();
-            
-            if (rank === 1) {
-                row.classList.add('top-rank');
-            }
-            
-            row.insertCell().textContent = rank;
-            row.insertCell().textContent = entry.name;
-            row.insertCell().textContent = `${entry.score}/${questions.length}`;
-        });
-        
-        if (rankingData.length === 0) {
-              const row = rankingBody.insertRow();
-              const cell = row.insertCell();
-              cell.colSpan = 3;
-              cell.textContent = "Belum ada pemain";
-        }
-    }
-
-    // Mulai game saat halaman dimuat
-    startGame();
+    // Mulai game saat halaman dimuat
+    startGame();
 </script>
 
 </body>
