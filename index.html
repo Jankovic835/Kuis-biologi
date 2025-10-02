@@ -277,13 +277,11 @@
         }
     ];
 
-    // ==================== Variabel GLOBAL yang Dimodifikasi ====================
+    // Variabel dan Fungsi JavaScript
     let currentQuestionIndex = 0;
+    let score = 0;
     let playerName = '';
-    // ARRAY BARU: Untuk menyimpan jawaban pengguna
-    let userAnswers = [];
-    // --------------------------------------------------------------------------
-    
+    // Kode Pass untuk Guru (Bisa diubah, disarankan pakai kode yang mudah diingat)
     const TEACHER_PASS = "BIOLOGI123"; 
     let rankingData = JSON.parse(localStorage.getItem('quizRankingPastel')) || []; 
     
@@ -328,7 +326,7 @@
         }
 
         currentQuestionIndex = 0;
-        userAnswers = []; // Reset jawaban pengguna
+        score = 0;
         
         startScreen.style.display = 'none';
         quizGameScreen.style.display = 'block';
@@ -353,4 +351,131 @@
     }
 
     function viewRanking() {
-        // Sembunyikan
+        // Sembunyikan semua layar yang tidak diperlukan
+        startScreen.style.display = 'none';
+        quizGameScreen.style.display = 'none';
+        resultScreen.style.display = 'block';
+
+        // Sembunyikan elemen skor dan pesan yang hanya muncul setelah kuis selesai
+        resultScoreElement.style.display = 'none'; 
+        resultMessageElement.style.display = 'none';
+        
+        // Ubah Judul Hasil untuk Guru
+        resultTextElement.textContent = 'Peringkat 🏆';
+
+        displayRanking();
+    }
+
+
+    // ----------------------------------------------------
+    // Fungsi Game Play
+    // ----------------------------------------------------
+
+    function showQuestion() {
+        if (currentQuestionIndex < questions.length) {
+            const currentQ = questions[currentQuestionIndex];
+            questionNumberElement.textContent = `Soal ${currentQuestionIndex + 1}/${questions.length}`;
+            questionTextElement.innerHTML = currentQ.question;
+            
+            // Tampilkan Pilihan Jawaban pada tombol
+            btnA.textContent = currentQ.options[0];
+            btnB.textContent = currentQ.options[1];
+            btnC.textContent = currentQ.options[2];
+            btnD.textContent = currentQ.options[3];
+        } else {
+            showResult();
+        }
+    }
+
+    function checkAnswer(userAnswer) {
+        const currentQ = questions[currentQuestionIndex];
+        const isCorrect = (userAnswer === currentQ.answer);
+
+        if (isCorrect) {
+            score++;
+            alert("✅ BENAR! Skor bertambah.");
+        } else {
+            alert(`❌ SALAH. Jawaban Benar adalah ${currentQ.answer}. Penjelasan: ${currentQ.rationale}`);
+        }
+
+        currentQuestionIndex++;
+        showQuestion();
+    }
+
+    // ----------------------------------------------------
+    // Fungsi Akhir: Hasil dan Ranking
+    // ----------------------------------------------------
+
+    function showResult() {
+        saveScore(playerName, score);
+        
+        quizGameScreen.style.display = 'none';
+        resultScreen.style.display = 'block';
+
+        // Pastikan elemen skor dan pesan muncul setelah kuis biasa
+        resultScoreElement.style.display = 'block';
+        resultMessageElement.style.display = 'block';
+        resultTextElement.textContent = 'Hasil Akhir:'; // Kembalikan judul hasil
+        
+        resultScoreElement.textContent = `${score}/${questions.length}`;
+
+        let message = '';
+        if (score === questions.length) {
+            message = `🎉 SELAMAT ${playerName}!  Kamu menguasai Pembelahan Sel! 🌟`;
+        } else if (score >= 5) {
+            message = `👍 Hebat, ${playerName}! Pemahamanmu bagus. Terus berlatih!`;
+        } else {
+            message = `✍️ Semangat ${playerName}! Coba pelajari lagi materinya.`;
+        }
+        resultMessageElement.textContent = message;
+        
+        displayRanking(); // Tampilkan peringkat yang sudah diperbarui
+    }
+
+    function saveScore(name, finalScore) {
+        const newEntry = { name: name, score: finalScore, timestamp: Date.now() };
+        rankingData.push(newEntry);
+        
+        rankingData.sort((a, b) => b.score - a.score); // Urutkan berdasarkan skor
+        
+        if (rankingData.length > 32) {
+            rankingData = rankingData.slice(0, 32); // Batasi 32 besar
+        }
+        
+        localStorage.setItem('quizRankingPastel', JSON.stringify(rankingData));
+    }
+
+    function displayRanking() {
+        rankingBody.innerHTML = ''; 
+        
+        rankingData.forEach((entry, index) => {
+            const rank = index + 1;
+            const row = rankingBody.insertRow();
+            
+            if (rank === 1) {
+                row.classList.add('top-rank');
+            }
+            
+            row.insertCell().textContent = rank;
+            row.insertCell().textContent = entry.name;
+            row.insertCell().textContent = `${entry.score}/${questions.length}`;
+        });
+        
+        if (rankingData.length === 0) {
+              const row = rankingBody.insertRow();
+              const cell = row.insertCell();
+              cell.colSpan = 3;
+              cell.textContent = "Belum ada pemain";
+        }
+    }
+
+    // Mulai game saat halaman dimuat
+    startGame();
+</script>
+
+</body>
+</html>
+
+
+
+aku maunya ini jangan dikasih tau dulu benar salahnya. langsung lanjut ke next question gitu nanti at the end itu tu baru keluar hasil nya bener berapa
