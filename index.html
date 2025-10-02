@@ -503,11 +503,11 @@
     // ================== Peringkat ==================
 
     function promptPassword() {
-        const inputPass = prompt("Masukkan KODE GURU untuk melihat peringkat:");
+        const inputPass = prompt("Masukkan KODE");
         if (inputPass === TEACHER_PASS) {
             viewRankingOnly();
         } else if (inputPass !== null) {
-            alert("❌ KODE SALAH! Anda tidak memiliki akses.");
+            alert("❌ KODE SALAH!");
         }
     }
 
@@ -534,7 +534,7 @@
     function displayRanking() {
         rankingBody.innerHTML = '';
         if (rankingData.length === 0) {
-            rankingBody.innerHTML = `<tr><td colspan="3">Belum ada pemain yang menyelesaikan kuis.</td></tr>`;
+            rankingBody.innerHTML = `<tr><td colspan="3">Belum ada pemain.</td></tr>`;
             return;
         }
 
@@ -556,4 +556,5 @@
 
 </body>
 </html>
+
 
